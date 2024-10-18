@@ -50,9 +50,9 @@ public class CustomAdapter extends BaseAdapter {
         TextView tvDateUpdate= convertView.findViewById(R.id.tvDateUpdate);
 
         tvPhoneNumber.setText(user.getPhoneNumber());
-        tvPoints.setText(String.valueOf(user.getPoint()));
-        tvDateCreate.setText(user.getDateCreate());
-        tvDateUpdate.setText(user.getDateUpdate());
+        tvPoints.setText("Point: "+String.valueOf(user.getPoint()));
+        tvDateCreate.setText("Date create: "+user.getDateCreate());
+        tvDateUpdate.setText("Date update: "+user.getDateUpdate());
 
         return convertView;
     }

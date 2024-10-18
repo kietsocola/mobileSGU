@@ -1,6 +1,7 @@
 package com.example.Login;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,17 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Kiểm tra xem người dùng đã đăng nhập hay chưa
+        SharedPreferences sharedPref = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+        boolean isLoggedIn = sharedPref.getBoolean("isLoggedIn", false);
+
+        if (isLoggedIn) {
+            // Người dùng đã đăng nhập, chuyển hướng đến màn hình ListViewPoint
+            Intent intent = new Intent(LoginActivity.this, ListViewPoint.class);
+            startActivity(intent);
+            finish(); // Kết thúc LoginActivity để tránh quay lại màn hình đăng nhập
+            return; // Không thực hiện phần còn lại của onCreate
+        }
         setContentView(R.layout.login);
 
         txtUsername = findViewById(R.id.editTextText2);
@@ -36,12 +48,17 @@ public class LoginActivity extends AppCompatActivity {
                 String username = txtUsername.getText().toString();
                 String pwd = txtPwd.getText().toString();
 
-                if(db.checkUser(username, pwd)){
+                if (db.checkUser(username, pwd)) {
 //                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                    SharedPreferences sharedPref = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putBoolean("isLoggedIn", true); // Đánh dấu người dùng đã đăng nhập
+                    editor.putString("username", username); // Lưu thêm tên người dùng nếu cần
+                    editor.apply();
                     Intent intent = new Intent(LoginActivity.this, ListViewPoint.class);
                     startActivity(intent);
                     finish();
-                }else {
+                } else {
                     Toast.makeText(LoginActivity.this, "Sai tên đăng nhập hoặc mật khẩu", Toast.LENGTH_SHORT).show();
                 }
             }

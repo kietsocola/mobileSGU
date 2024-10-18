@@ -136,4 +136,13 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();  // Đóng con trỏ để tránh rò rỉ tài nguyên
         return exists;
     }
+    public void updatePassword(String username, String newPassword) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PASSWORD, newPassword); // Cập nhật mật khẩu mới
+
+        // Cập nhật bản ghi trong cơ sở dữ liệu
+        db.update(TABLE_USER, values, COLUMN_USERNAME + "=?", new String[]{username});
+    }
 }
