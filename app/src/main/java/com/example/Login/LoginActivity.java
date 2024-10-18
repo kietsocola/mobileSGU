@@ -11,7 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.Database.DBHelper;
-import com.example.ListView.ListViewPoint;
+import com.example.ListView.ListViewPointFragment;
 import com.example.apptichdiem.MainActivity;
 import com.example.apptichdiem.R;
 
@@ -24,24 +24,30 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // Kiểm tra xem người dùng đã đăng nhập hay chưa
         SharedPreferences sharedPref = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
         boolean isLoggedIn = sharedPref.getBoolean("isLoggedIn", false);
+        long loginTime = sharedPref.getLong("loginTime", 0);
 
-        if (isLoggedIn) {
-            // Người dùng đã đăng nhập, chuyển hướng đến màn hình ListViewPoint
-            Intent intent = new Intent(LoginActivity.this, ListViewPoint.class);
+        // Kiểm tra thời gian đã đăng nhập
+        if (isLoggedIn && (System.currentTimeMillis() - loginTime) < 60000) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
-            finish(); // Kết thúc LoginActivity để tránh quay lại màn hình đăng nhập
+            finish();
             return; // Không thực hiện phần còn lại của onCreate
         }
+
         setContentView(R.layout.login);
 
         txtUsername = findViewById(R.id.editTextText2);
+        txtUsername.setText("user1");
         txtPwd = findViewById(R.id.editTextTextPassword2);
+        txtPwd.setText("password1");
         loginBtn = findViewById(R.id.buttonLogin);
         db = new DBHelper(this);
         db.insertSampleData();
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,13 +55,14 @@ public class LoginActivity extends AppCompatActivity {
                 String pwd = txtPwd.getText().toString();
 
                 if (db.checkUser(username, pwd)) {
-//                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                     SharedPreferences sharedPref = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putBoolean("isLoggedIn", true); // Đánh dấu người dùng đã đăng nhập
-                    editor.putString("username", username); // Lưu thêm tên người dùng nếu cần
+                    editor.putString("username", username); // Lưu tên người dùng
+                    editor.putLong("loginTime", System.currentTimeMillis()); // Lưu thời gian đăng nhập
                     editor.apply();
-                    Intent intent = new Intent(LoginActivity.this, ListViewPoint.class);
+
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
@@ -65,3 +72,4 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 }
+

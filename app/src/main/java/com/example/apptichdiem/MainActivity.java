@@ -1,25 +1,97 @@
 package com.example.apptichdiem;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
+import android.view.MenuItem;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.example.Database.DBHelper;
-import com.example.ListView.CustomAdapter;
-import com.example.Model.User;
-
-import java.util.List;
+import com.example.ListView.ListViewPointFragment;
+import com.example.ListView.ProfileFragment;
+import com.example.Login.LoginActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
-
-    private DBHelper db;
-    private ListView listViewUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // Load the default fragment (ProfileFragment)
+        loadFragment(new ListViewPointFragment());
+
+        // Handle navigation item selection
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment selectedFragment = null;
+
+                int itemId = item.getItemId();
+
+                if (itemId == R.id.menu_add) {
+                    selectedFragment = new ListViewPointFragment();
+                } else if (itemId == R.id.menu_delete) {
+                    Toast.makeText(MainActivity.this, "Edit được chọn", Toast.LENGTH_SHORT).show();
+                    return true;  // Trả về true để giữ trạng thái của menu
+                } else if (itemId == R.id.menu_profile) {
+                    selectedFragment = new ProfileFragment();
+                } else if (itemId == R.id.menu_logout) {
+                    handleLogout();  // Thực hiện đăng xuất
+                    return true;  // Trả về true vì không có fragment để load
+                }
+
+                if (selectedFragment != null) {
+                    loadFragment(selectedFragment);
+                }
+                return true;
+            }
+        });
     }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.addToBackStack(null); // Thêm fragment vào back stack
+        fragmentTransaction.commit();
+    }
+
+    private void handleLogout() {
+        new android.app.AlertDialog.Builder(MainActivity.this)
+                .setTitle("Xác nhận đăng xuất")
+                .setMessage("Bạn có chắc chắn muốn đăng xuất không?")
+                .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Nếu người dùng đồng ý đăng xuất
+                        SharedPreferences sharedPref = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putBoolean("isLoggedIn", false); // Đánh dấu người dùng là chưa đăng nhập
+                        editor.remove("loginTime"); // Xóa thời gian đăng nhập
+                        editor.remove("username"); // Xóa tên người dùng (nếu bạn đã lưu)
+                        editor.apply();
+
+                        // Chuyển hướng về màn hình đăng nhập
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                        Toast.makeText(MainActivity.this, "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Nếu người dùng chọn hủy, đóng hộp thoại
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
 }

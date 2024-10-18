@@ -1,23 +1,19 @@
+<!-- res/menu/bottom_navigation_menu.xml -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item
         android:id="@+id/menu_add"
-        android:icon="@drawable/logo"
-    android:title="List" />
-
+        android:icon="@drawable/iconlist"
+        android:title="List" />
     <item
         android:id="@+id/menu_delete"
-        android:icon="@drawable/logo"
-    android:title="Xóa" />
-
-    <item
-        android:id="@+id/menu_logout"
-        android:icon="@drawable/logo"
-    android:title="Đăng xuất" />
-
+        android:icon="@drawable/iconedit2"
+        android:title="Edit" />
     <item
         android:id="@+id/menu_profile"
-        android:icon="@drawable/logo"
-    android:title="Hồ sơ" />
-
+        android:icon="@drawable/iconperson"
+        android:title="Profile" />
+    <item
+        android:id="@+id/menu_logout"
+        android:icon="@drawable/iconlogout"
+        android:title="Logout" />
 </menu>
