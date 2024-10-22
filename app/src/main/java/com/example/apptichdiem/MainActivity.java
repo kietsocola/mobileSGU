@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.ListView.InputPointsFragment;
 import com.example.ListView.ListViewPointFragment;
 import com.example.ListView.ProfileFragment;
 import com.example.Login.LoginActivity;
@@ -39,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
                 if (itemId == R.id.menu_add) {
                     selectedFragment = new ListViewPointFragment();
                 } else if (itemId == R.id.menu_delete) {
-                    Toast.makeText(MainActivity.this, "Edit được chọn", Toast.LENGTH_SHORT).show();
+                    // Load Fragment nhập điểm thay vì hiển thị Toast
+                    selectedFragment = new InputPointsFragment(); // Sử dụng Fragment bạn muốn hiển thị
+                    loadFragment(selectedFragment); // Hàm loadFragment sẽ thay thế Fragment hiện tại
                     return true;  // Trả về true để giữ trạng thái của menu
                 } else if (itemId == R.id.menu_profile) {
                     selectedFragment = new ProfileFragment();

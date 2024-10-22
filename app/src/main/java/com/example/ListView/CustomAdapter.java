@@ -56,4 +56,11 @@ public class CustomAdapter extends BaseAdapter {
 
         return convertView;
     }
+
+    // Cập nhật danh sách và thông báo cho adapter
+    public void updateUserList(List<User> newUserList) {
+        this.userList.clear();
+        this.userList.addAll(newUserList);
+        notifyDataSetChanged();
+    }
 }

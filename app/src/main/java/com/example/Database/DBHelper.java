@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.Model.User;
 
@@ -100,11 +101,15 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + TABLE_USER_DETAILS + "." + COLUMN_PHONE_NUMBER + ", " +
+                TABLE_USER_DETAILS + "." + COLUMN_POINTS + ", " +
+                TABLE_USER_DETAILS + "." + COLUMN_CREATED_AT + ", " +
+                TABLE_USER_DETAILS + "." + COLUMN_UPDATED_AT +
+                " FROM " + TABLE_USER_DETAILS +
+                " INNER JOIN " + TABLE_USER +
+                " ON " + TABLE_USER_DETAILS + "." + COLUMN_USERNAME + " = " + TABLE_USER + "." + COLUMN_USERNAME;
 
-        // Truy vấn để lấy tất cả thông tin từ bảng user_details kết hợp với bảng users
-        Cursor cursor = db.rawQuery("SELECT " + COLUMN_PHONE_NUMBER + ", " +
-                COLUMN_POINTS + ", " + COLUMN_CREATED_AT + ", " + COLUMN_UPDATED_AT +
-                " FROM " + TABLE_USER , null);
+        Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -113,11 +118,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 @SuppressLint("Range") String dateCreate = cursor.getString(cursor.getColumnIndex(COLUMN_CREATED_AT));
                 @SuppressLint("Range") String dateUpdate = cursor.getString(cursor.getColumnIndex(COLUMN_UPDATED_AT));
 
-                // Tạo đối tượng User và thêm vào danh sách
                 userList.add(new User(phoneNumber, points, dateCreate, dateUpdate));
             } while (cursor.moveToNext());
         }
-
         cursor.close();
         return userList;
     }
@@ -145,4 +148,48 @@ public class DBHelper extends SQLiteOpenHelper {
         // Cập nhật bản ghi trong cơ sở dữ liệu
         db.update(TABLE_USER, values, COLUMN_USERNAME + "=?", new String[]{username});
     }
+
+    public int getPointsByPhoneNumber(String phoneNumber) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_USER_DETAILS,
+                new String[]{COLUMN_POINTS},
+                COLUMN_PHONE_NUMBER + "=?",
+                new String[]{phoneNumber}, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            @SuppressLint("Range") int points = cursor.getInt(cursor.getColumnIndex(COLUMN_POINTS));
+            cursor.close();
+            return points;
+        }
+
+        return 0;  // Nếu không tìm thấy số điện thoại
+    }
+
+    public void updatePointsByPhoneNumber(String phoneNumber, int newPoints) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_POINTS, newPoints);
+        values.put(COLUMN_UPDATED_AT, System.currentTimeMillis());  // Cập nhật thời gian
+
+        db.update(TABLE_USER_DETAILS, values, COLUMN_PHONE_NUMBER + "=?", new String[]{phoneNumber});
+    }
+
+    public void addNewUserDetails(String phoneNumber, int points, String username) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PHONE_NUMBER, phoneNumber);
+        values.put(COLUMN_POINTS, points);
+        values.put(COLUMN_USERNAME, username);
+        values.put(COLUMN_CREATED_AT, System.currentTimeMillis());
+        values.put(COLUMN_UPDATED_AT, System.currentTimeMillis());
+
+        long result = db.insert(TABLE_USER_DETAILS, null, values);
+        if (result == -1) {
+            Log.e("DBHelper", "Thêm số điện thoại thất bại: " + phoneNumber);
+        } else {
+            Log.i("DBHelper", "Thêm số điện thoại thành công: " + phoneNumber);
+        }
+    }
+
+
 }
