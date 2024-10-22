@@ -12,10 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppTichDiem"
         tools:targetApi="31">
+        <activity
+            android:name="com.example.UsePoint.UsePoint"
+            android:exported="false" />
+
         <provider
             android:name="com.example.Database.UserProvider"
             android:authorities="com.example.app.Login"
             android:exported="true" />
+
         <activity
             android:name="com.example.Login.LoginActivity"
             android:exported="true">

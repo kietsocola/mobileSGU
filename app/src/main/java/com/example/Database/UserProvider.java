@@ -14,6 +14,7 @@ public class UserProvider extends ContentProvider {
     private static final String PATH_USER_LIST = "users";
     private static final String PATH_USER_BY_USERNAME = "user";
 
+
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + PATH_USER_LIST);
     public static final Uri CONTENT_URI_BY_USERNAME = Uri.parse("content://" + AUTHORITY + "/" + PATH_USER_BY_USERNAME);
 
