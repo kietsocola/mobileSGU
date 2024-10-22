@@ -13,7 +13,7 @@
         android:theme="@style/Theme.AppTichDiem"
         tools:targetApi="31">
         <activity
-            android:name="com.example.UsePoint.UsePoint"
+            android:name="com.example.ListView.UsePoint"
             android:exported="false" />
 
         <provider
