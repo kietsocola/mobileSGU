@@ -8,6 +8,7 @@ public class User {
     private String dateCreate;
     private String dateUpdate;
 
+    public User(){}
     public User(String phoneNumber, int point, String dateCreate, String dateUpdate) {
         this.dateCreate = dateCreate;
         this.dateUpdate = dateUpdate;

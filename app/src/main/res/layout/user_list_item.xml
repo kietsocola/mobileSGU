@@ -1,39 +1,55 @@
-<!-- res/layout/user_list_item.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="8dp">
 
-    <TextView
-        android:id="@+id/tvPhoneNumber"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Phone number"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:orientation="vertical"
+        android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/tvPoints"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Points" />
+        <TextView
+            android:id="@+id/tvPhoneNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone number"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tvDateCreate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create At"
-        android:textStyle="italic"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tvPoints"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Points" />
 
-    <TextView
-        android:id="@+id/tvDateUpdate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Update At"
-        android:textStyle="italic"
-        android:textSize="14sp"
-        android:gravity="end" />
+        <TextView
+            android:id="@+id/tvDateCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create At"
+            android:textStyle="italic"
+            android:textSize="14sp" />
 
+        <TextView
+            android:id="@+id/tvDateUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update At"
+            android:textStyle="italic"
+            android:textSize="14sp"
+            android:gravity="end" />
+
+    </LinearLayout>
+
+    <!-- Thêm ImageView cho icon xóa -->
+    <ImageView
+        android:id="@+id/ivDelete"
+        android:layout_width="50dp"
+        android:layout_height="43dp"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="Delete Icon"
+        android:padding="8dp"
+        android:src="@drawable/icondelete" />
 </LinearLayout>
