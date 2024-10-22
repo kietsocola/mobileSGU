@@ -6,7 +6,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.example.Login.LoginActivity;
 import com.example.Model.User;
 
 import java.text.SimpleDateFormat;
@@ -67,38 +70,58 @@ public class DBHelper extends SQLiteOpenHelper {
     public void insertSampleData() {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // Dữ liệu mẫu 1
-        ContentValues values1 = new ContentValues();
-        values1.put(COLUMN_USERNAME, "user1");
-        values1.put(COLUMN_PASSWORD, "password1");
+        // Kiểm tra xem bảng users có dữ liệu chưa
+        String countQuery = "SELECT COUNT(*) FROM " + TABLE_USER;
+        Cursor cursor = db.rawQuery(countQuery, null);
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+//        cursor.close();
 
-        // Dữ liệu mẫu 2
-        ContentValues values2 = new ContentValues();
-        values2.put(COLUMN_USERNAME, "user2");
-        values2.put(COLUMN_PASSWORD, "password2");
+        String countQuery2 = "SELECT COUNT(*) FROM " + TABLE_USER_DETAILS;
+        Cursor cursor2 = db.rawQuery(countQuery2, null);
+        cursor2.moveToFirst();
+        int count2 = cursor2.getInt(0);
 
-        // Thêm dữ liệu vào bảng users
-        db.insert(TABLE_USER, null, values1);
-        db.insert(TABLE_USER, null, values2);
+//        cursor2.close();
+        if (count == 0) { // Chỉ thêm dữ liệu khi bảng rỗng
+            // Dữ liệu mẫu 1
+            ContentValues values1 = new ContentValues();
+            values1.put(COLUMN_USERNAME, "user1");
+            values1.put(COLUMN_PASSWORD, "password1");
 
-        // Dữ liệu mẫu cho user_details
-        ContentValues userDetails1 = new ContentValues();
-        userDetails1.put(COLUMN_PHONE_NUMBER, "0123456789");
-        userDetails1.put(COLUMN_POINTS, 100);
-        userDetails1.put(COLUMN_USERNAME, "user1"); // Liên kết với bảng users
+            // Dữ liệu mẫu 2
+            ContentValues values2 = new ContentValues();
+            values2.put(COLUMN_USERNAME, "user2");
+            values2.put(COLUMN_PASSWORD, "password2");
 
-        ContentValues userDetails2 = new ContentValues();
-        userDetails2.put(COLUMN_PHONE_NUMBER, "0987654321");
-        userDetails2.put(COLUMN_POINTS, 200);
-        userDetails2.put(COLUMN_USERNAME, "user2"); // Liên kết với bảng users
+            // Thêm dữ liệu vào bảng users
+            db.insert(TABLE_USER, null, values1);
+            db.insert(TABLE_USER, null, values2);
 
-        // Thêm dữ liệu vào bảng user_details
-        db.insert(TABLE_USER_DETAILS, null, userDetails1);
-        db.insert(TABLE_USER_DETAILS, null, userDetails2);
+
+        }
+        if(count2 == 0){
+            // Dữ liệu mẫu cho user_details
+            ContentValues userDetails1 = new ContentValues();
+            userDetails1.put(COLUMN_PHONE_NUMBER, "0123456789");
+            userDetails1.put(COLUMN_POINTS, 100);
+            userDetails1.put(COLUMN_USERNAME, "user1"); // Liên kết với bảng users
+
+            ContentValues userDetails2 = new ContentValues();
+            userDetails2.put(COLUMN_PHONE_NUMBER, "0987654321");
+            userDetails2.put(COLUMN_POINTS, 200);
+            userDetails2.put(COLUMN_USERNAME, "user2"); // Liên kết với bảng users
+
+            // Thêm dữ liệu vào bảng user_details
+            db.insert(TABLE_USER_DETAILS, null, userDetails1);
+            db.insert(TABLE_USER_DETAILS, null, userDetails2);
+        }
 
         // Đóng database sau khi thêm dữ liệu
-//        db.close();
+        // db.close();
+//        return count2;
     }
+
 
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
