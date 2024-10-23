@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.ListView.InputPointsFragment;
 import com.example.ListView.ListViewPointFragment;
 import com.example.ListView.ProfileFragment;
 import com.example.ListView.UsePoint;
