@@ -9,58 +9,16 @@
 
     <!-- res/layout/fragment_use_points.xml -->
 
-    <Button
-        android:id="@+id/btnUse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="USE"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="625dp"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:text="SAVE"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="499dp"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/btnInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="INPUT"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.099"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="625dp"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/btnList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LIST"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.922"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="625dp"
-        tools:ignore="MissingConstraints" />
-
     <LinearLayout
-        android:layout_width="414dp"
-        android:layout_height="347dp"
+        android:layout_width="416dp"
+        android:layout_height="304dp"
         android:orientation="vertical"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.329"
-        tools:layout_editor_absoluteX="-2dp"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintVertical_bias="0.336"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-2dp">
 
         <!-- Input fields -->
 
@@ -89,9 +47,9 @@
             android:id="@+id/txtCurrent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:hint="Current point"
-            android:inputType="number"
-            android:enabled="false"/>
+            android:inputType="number" />
 
         <!-- Field for points to be used -->
         <TextView
@@ -106,48 +64,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Points to use"
-            android:inputType="number"
-           />
+            android:inputType="number" />
 
-
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Note"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/txtNote"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Note" />
 
         <!-- Submit button -->
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btnNext"
-        android:layout_width="194dp"
-        android:layout_height="wrap_content"
-        android:text="SAVE AND NEXT"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.703"
-        app:layout_constraintStart_toEndOf="@+id/btnSave"
-        tools:layout_editor_absoluteY="499dp"
-        tools:ignore="MissingConstraints" />
-
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
         android:text="USE POINT"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="68dp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.469"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="208dp"
+        android:text="SAVE"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

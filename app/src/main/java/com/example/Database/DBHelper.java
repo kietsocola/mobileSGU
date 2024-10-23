@@ -17,6 +17,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "point.db";
     public static final int DATABASE_VERSION = 2; // Tăng version của database
 
+
     // Bảng users
     public static final String TABLE_USER = "users";
     public static final String COLUMN_USERNAME = "username";

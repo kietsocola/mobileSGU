@@ -18,13 +18,14 @@ import com.example.apptichdiem.R;
 
 public class UsePoint extends Fragment {
 
-    private EditText txtPhone, txtCurrent, txtUsePoint, txtNote;
+    private EditText txtPhone, txtCurrent, txtUsePoint;
     private Button btnSave, btnNext;
 
     public UsePoint() {
         // Required empty public constructor
     }
 
+    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -33,9 +34,22 @@ public class UsePoint extends Fragment {
         txtPhone = view.findViewById(R.id.txtPhone);
         txtCurrent = view.findViewById(R.id.txtCurrent);
         txtUsePoint = view.findViewById(R.id.txtUsePoint);
-        txtNote = view.findViewById(R.id.txtNote);
+//        txtNote = view.findViewById(R.id.txtNote);
         btnSave = view.findViewById(R.id.btnSave);
-        btnNext = view.findViewById(R.id.btnNext);
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            String phoneNumber = bundle.getString("phoneNumber");
+            int points = bundle.getInt("points");
+
+
+            txtPhone.setText(phoneNumber);
+            txtCurrent.setText(String.valueOf(points));
+
+
+        }
+
+
 
         DBHelper dbHelper = new DBHelper(getContext());
 
@@ -63,17 +77,23 @@ public class UsePoint extends Fragment {
         // Save button logic
         btnSave.setOnClickListener(v -> {
             String phone = txtPhone.getText().toString().trim();
-            String note = txtNote.getText().toString().trim();
+//            String note = txtNote.getText().toString().trim();
+            String pointsInput = txtUsePoint.getText().toString().trim();
 
             // Validate input
-            if (phone.isEmpty() || txtCurrent.getText().toString().trim().isEmpty() ||
-                    txtUsePoint.getText().toString().trim().isEmpty()) {
+            if (phone.isEmpty() || txtCurrent.getText().toString().trim().isEmpty() || pointsInput.isEmpty()) {
                 Toast.makeText(getActivity(), "Please fill all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            // Kiểm tra xem điểm sử dụng có phải là số không
+            if (!pointsInput.matches("\\d+")) {  // Kiểm tra xem có phải là số nguyên dương
+                Toast.makeText(getActivity(), "Points must be a valid number!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             try {
-                int pointsToUse = Integer.parseInt(txtUsePoint.getText().toString().trim());
+                int pointsToUse = Integer.parseInt(pointsInput);
                 int currentPoints = Integer.parseInt(txtCurrent.getText().toString().trim());
 
                 if (currentPoints >= pointsToUse) {
@@ -81,27 +101,36 @@ public class UsePoint extends Fragment {
                     dbHelper.updatePointsByPhoneNumber(phone, updatedPoints);
 
                     // Update customer points and notes
-                    updateCustomerPoints(phone, updatedPoints, note);
+                    updateCustomerPoints(phone, updatedPoints);
                     Toast.makeText(getActivity(), "Points used successfully! Remaining: " + updatedPoints, Toast.LENGTH_SHORT).show();
+
+                    // Quay lại trang danh sách sau khi lưu
+                    getActivity().getSupportFragmentManager().popBackStack();
                 } else {
                     Toast.makeText(getActivity(), "Insufficient points!", Toast.LENGTH_SHORT).show();
                 }
             } catch (NumberFormatException e) {
-                Toast.makeText(getActivity(), "Please enter a valid number", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Invalid points format!", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();  // In ra lỗi để xem chi tiết
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), "Error occurred: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                e.printStackTrace();  // In ra lỗi để xem chi tiết
             }
         });
+
+
 
         return view;
     }
 
     // Method to update customer points and notes
-    private void updateCustomerPoints(String phoneNumber, int updatedPoints, String note) {
+    private void updateCustomerPoints(String phoneNumber, int updatedPoints) {
         DBHelper dbHelper = new DBHelper(getContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put("points", updatedPoints);
-        values.put("note", note);
+
 
         db.update(DBHelper.TABLE_USER_DETAILS, values, "phone_number = ?", new String[]{phoneNumber});
     }

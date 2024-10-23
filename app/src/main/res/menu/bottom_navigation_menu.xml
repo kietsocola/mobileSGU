@@ -12,6 +12,7 @@
         android:id="@+id/menu_profile"
         android:icon="@drawable/iconperson"
         android:title="Profile" />
+
     <item
         android:id="@+id/menu_logout"
         android:icon="@drawable/iconlogout"

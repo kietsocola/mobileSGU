@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.ListView.ListViewPointFragment;
 import com.example.ListView.ProfileFragment;
+import com.example.ListView.UsePoint;
 import com.example.Login.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -38,15 +39,20 @@ public class MainActivity extends AppCompatActivity {
 
                 if (itemId == R.id.menu_add) {
                     selectedFragment = new ListViewPointFragment();
-                } else if (itemId == R.id.menu_delete) {
-                    Toast.makeText(MainActivity.this, "Edit được chọn", Toast.LENGTH_SHORT).show();
-                    return true;  // Trả về true để giữ trạng thái của menu
-                } else if (itemId == R.id.menu_profile) {
+               }
+//                else if (itemId == R.id.menu_delete) {
+//                    Toast.makeText(MainActivity.this, "Edit được chọn", Toast.LENGTH_SHORT).show();
+//                    return true;  // Trả về true để giữ trạng thái của menu
+//                }
+               else if (itemId == R.id.menu_profile) {
                     selectedFragment = new ProfileFragment();
                 } else if (itemId == R.id.menu_logout) {
                     handleLogout();  // Thực hiện đăng xuất
                     return true;  // Trả về true vì không có fragment để load
+                }else if (itemId == R.id.menu_delete) {  // Thêm mục này cho UsePointFragment
+                    selectedFragment = new UsePoint();
                 }
+
 
                 if (selectedFragment != null) {
                     loadFragment(selectedFragment);
