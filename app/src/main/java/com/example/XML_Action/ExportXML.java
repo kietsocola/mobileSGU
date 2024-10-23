@@ -14,6 +14,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import android.content.Intent;
+import android.net.Uri;
+import androidx.core.content.FileProvider;
+
 public class ExportXML {
 
     private Context context;
@@ -70,9 +74,28 @@ public class ExportXML {
 
             System.out.println("File đã được lưu tại: " + xmlFile.getAbsolutePath());
             Toast.makeText(context.getApplicationContext(), "File đã được lưu tại: " + xmlFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+            sendEmailWithXML(xmlFile);
         } catch (IOException e) {
             Toast.makeText(context.getApplicationContext(), "Lưu file lỗi", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
+        }
+    }
+    public void sendEmailWithXML(File xmlFile) {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("application/xml");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Danh sách khách hàng");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Xin vui lòng tìm đính kèm danh sách khách hàng.");
+
+        // Tạo Uri cho file XML
+        Uri uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".fileprovider", xmlFile);
+        emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        // Kiểm tra xem có ứng dụng nào có thể xử lý Intent này không
+        if (emailIntent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(Intent.createChooser(emailIntent, "Gửi email..."));
+        } else {
+            Toast.makeText(context, "Không có ứng dụng email nào được cài đặt.", Toast.LENGTH_SHORT).show();
         }
     }
 }
