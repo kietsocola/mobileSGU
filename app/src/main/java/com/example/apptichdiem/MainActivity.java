@@ -1,6 +1,4 @@
 package com.example.apptichdiem;
-import static android.app.PendingIntent.getActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,8 +25,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // Load the default fragment (ProfileFragment)
         loadFragment(new ListViewPointFragment());
 
+        // Handle navigation item selection
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -39,14 +40,16 @@ public class MainActivity extends AppCompatActivity {
                 if (itemId == R.id.menu_add) {
                     selectedFragment = new ListViewPointFragment();
                 } else if (itemId == R.id.menu_delete) {
-                    Toast.makeText(MainActivity.this, "Edit được chọn", Toast.LENGTH_SHORT).show();
-                    return true;
+                    // Load Fragment nhập điểm thay vì hiển thị Toast
+                    selectedFragment = new InputPointsFragment(); // Sử dụng Fragment bạn muốn hiển thị
+                    loadFragment(selectedFragment); // Hàm loadFragment sẽ thay thế Fragment hiện tại
+                    return true;  // Trả về true để giữ trạng thái của menu
                 } else if (itemId == R.id.menu_profile) {
                     selectedFragment = new ProfileFragment();
                 } else if (itemId == R.id.menu_logout) {
-                    handleLogout();
-                    return true;
-                } else if (itemId == R.id.menu_use) {
+                    handleLogout();  // Thực hiện đăng xuất
+                    return true;  // Trả về true vì không có fragment để load
+                }else if (itemId == R.id.menu_use) {
                     // Lấy instance của ListViewPointFragment
                     ListViewPointFragment listViewPointFragment = (ListViewPointFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
@@ -83,8 +86,6 @@ public class MainActivity extends AppCompatActivity {
                 .addToBackStack(null)
                 .commit();
     }
-
-
 
     private void loadFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
