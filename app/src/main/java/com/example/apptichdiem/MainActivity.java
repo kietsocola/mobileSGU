@@ -1,4 +1,6 @@
 package com.example.apptichdiem;
+import static android.app.PendingIntent.getActivity;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,11 +27,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        // Load the default fragment (ProfileFragment)
         loadFragment(new ListViewPointFragment());
 
-        // Handle navigation item selection
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -39,20 +38,27 @@ public class MainActivity extends AppCompatActivity {
 
                 if (itemId == R.id.menu_add) {
                     selectedFragment = new ListViewPointFragment();
-               }
-                else if (itemId == R.id.menu_delete) {
+                } else if (itemId == R.id.menu_delete) {
                     Toast.makeText(MainActivity.this, "Edit được chọn", Toast.LENGTH_SHORT).show();
-                    return true;  // Trả về true để giữ trạng thái của menu
-                }
-               else if (itemId == R.id.menu_profile) {
+                    return true;
+                } else if (itemId == R.id.menu_profile) {
                     selectedFragment = new ProfileFragment();
                 } else if (itemId == R.id.menu_logout) {
-                    handleLogout();  // Thực hiện đăng xuất
-                    return true;  // Trả về true vì không có fragment để load
-                }else if (itemId == R.id.menu_use) {  //  mục này cho UsePointFragment
-                    selectedFragment = new UsePoint();
-                }
+                    handleLogout();
+                    return true;
+                } else if (itemId == R.id.menu_use) {
+                    // Lấy instance của ListViewPointFragment
+                    ListViewPointFragment listViewPointFragment = (ListViewPointFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
+                    // Lấy số điện thoại đã chọn
+                    String phoneNumber = listViewPointFragment != null ? listViewPointFragment.getSelectedPhoneNumber() : null;
+
+                    if (phoneNumber != null) {
+                        navigateToUsePointFragment(phoneNumber); // Chuyển số điện thoại đến phương thức
+                    } else {
+                        Toast.makeText(MainActivity.this, "Vui lòng chọn một đối tượng trước", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
                 if (selectedFragment != null) {
                     loadFragment(selectedFragment);
@@ -61,6 +67,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void navigateToUsePointFragment(String phoneNumber) {
+        UsePoint usePointFragment = new UsePoint();
+
+        // Chuyển số điện thoại dưới dạng tham số
+        Bundle args = new Bundle();
+        args.putString("phoneNumber", phoneNumber);
+        usePointFragment.setArguments(args);
+
+        // Chuyển đến fragment UsePoint
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, usePointFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+
 
     private void loadFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();

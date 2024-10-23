@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -22,6 +24,7 @@ public class ListViewPointFragment extends Fragment {
 
     private DBHelper db;
     private ListView listViewUsers;
+    private String selectedPhoneNumber;
 
     @SuppressLint("MissingInflatedId")
     @Nullable
@@ -38,27 +41,17 @@ public class ListViewPointFragment extends Fragment {
         CustomAdapter adapter = new CustomAdapter(getActivity(), userList);
         listViewUsers.setAdapter(adapter);
 
-        // Thiết lập sự kiện nhấn vào từng mục trong ListView
+        // Thêm sự kiện nhấp chuột vào item trong ListView
         listViewUsers.setOnItemClickListener((parent, view1, position, id) -> {
-            // Lấy thông tin người dùng tại vị trí được nhấn
-            User user = userList.get(position);
-
-            // Tạo một đối tượng Bundle để chứa dữ liệu
-            Bundle bundle = new Bundle();
-            bundle.putString("phoneNumber", user.getPhoneNumber());
-            bundle.putInt("points", user.getPoint());
-
-            // Tạo đối tượng UsePointFragment và gán Bundle
-            UsePoint usePointFragment = new UsePoint();
-            usePointFragment.setArguments(bundle);
-
-            // Thực hiện thay thế fragment hiện tại bằng UsePointFragment
-            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, usePointFragment);  // ID của container chứa fragment
-            transaction.addToBackStack(null);  // Thêm vào back stack để có thể quay lại
-            transaction.commit();
+            User selectedUser = userList.get(position); // Lấy đối tượng người dùng đã chọn
+            selectedPhoneNumber = selectedUser.getPhoneNumber(); // Lưu số điện thoại
+            Toast.makeText(getActivity(), "Đã chọn: " + selectedPhoneNumber, Toast.LENGTH_SHORT).show();
         });
 
         return view;
+    }
+
+    public String getSelectedPhoneNumber() {
+        return selectedPhoneNumber; // Phương thức getter để lấy số điện thoại đã chọn
     }
 }

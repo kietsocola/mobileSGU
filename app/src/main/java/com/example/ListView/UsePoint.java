@@ -31,27 +31,25 @@ public class UsePoint extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_use_point, container, false);
 
+        DBHelper dbHelper = new DBHelper(getContext());
+
         txtPhone = view.findViewById(R.id.txtPhone);
         txtCurrent = view.findViewById(R.id.txtCurrent);
         txtUsePoint = view.findViewById(R.id.txtUsePoint);
-//        txtNote = view.findViewById(R.id.txtNote);
         btnSave = view.findViewById(R.id.btnSave);
 
+        // Lấy các tham số và điền số điện thoại
         Bundle bundle = getArguments();
         if (bundle != null) {
             String phoneNumber = bundle.getString("phoneNumber");
-            int points = bundle.getInt("points");
-
-
             txtPhone.setText(phoneNumber);
+            // Lấy số điểm hiện tại cho số điện thoại và điền vào
+            int points = dbHelper.getPointsByPhoneNumber(phoneNumber);
             txtCurrent.setText(String.valueOf(points));
-
-
         }
 
 
 
-        DBHelper dbHelper = new DBHelper(getContext());
 
         // TextWatcher for phone number input
         txtPhone.addTextChangedListener(new TextWatcher() {
